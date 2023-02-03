@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>nuxt2axios自动注册接口 | Alphatrion</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://Alphatrionty.github.io/favicon.ico?v=1675391917901">
+<link rel="stylesheet" href="https://Alphatrionty.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="💎根据一些文章摸索出来的方法
+
+首先安装@/plugins/axios并在nuxt.config.js引入
+plugins: [&quot;@/plugins/axios&quot;],
+modules: [
+    &quot;@nux..." />
+    <meta name="keywords" content="技术相关" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://Alphatrionty.github.io">
+        <img src="https://Alphatrionty.github.io/images/avatar.png?v=1675391917901" class="site-logo">
+        <h1 class="site-title">Alphatrion</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      <h1>且听风呤，静待花开</h1>
+    </div>
+    <div class="site-footer">
+      alphatrion | <a class="rss" href="https://Alphatrionty.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">nuxt2axios自动注册接口</h2>
+            <div class="post-date">2022-10-20</div>
+            
+              <div class="feature-container" style="background-image: url('https://Alphatrionty.github.io/post-images/nuxt2axios-zi-dong-zhu-ce-jie-kou.webp')">
+              </div>
+            
+            <div class="post-content" v-pre>
+              <p>💎根据一些文章摸索出来的方法</p>
+<!-- more -->
+<p>首先安装<code>@/plugins/axios</code>并在<code>nuxt.config.js</code>引入</p>
+<pre><code>plugins: [&quot;@/plugins/axios&quot;],
+modules: [
+    &quot;@nuxtjs/axios&quot;,
+    // 是否开启跨域代理配置 根据项目酌情选择
+    &quot;@nuxtjs/proxy&quot;
+  ],
+axios: {
+    // baseURL: &quot;xxx&quot;,
+    // proxy: true,
+    // credentials: true,
+    proxy: true,
+    prefix: &quot;/api/&quot;,
+  },
+  proxy: {
+    &quot;/api/&quot;: {
+      target: &quot;&quot;, // 目标服务器ip
+      pathRewrite: {
+        &quot;^/api/&quot;: &quot;/&quot;, // 把 /api 替换成 /
+        // changeOrigin: true // 是否跨域
+      },
+    },
+  },
+</code></pre>
+<p>在<code> plugins</code> 目录下新建文件 <code>axios.js</code></p>
+<pre><code>import AllApi from &quot;./api/index&quot;; //导入整个api对象
+
+export default function ({ app, $axios, store, redirect }, inject) {
+  // $axios.defaults.baseURL = '';
+  // $axios.defaults.timeout = 5000;
+
+  // $axios.onRequest(config =&gt; {
+  //   // 相关配置
+  //   // config.headers[&quot;X-Access-Token&quot;] = app.$cookies.get(&quot;token&quot;) || &quot;&quot;;
+  //   const token = store.state.user.token;
+  //   if(token) config.headers.token = token;
+  // });
+  // // 服务器返回异常拦截
+  // $axios.onError(error =&gt; {
+  //   return error
+  // })
+  // // 接口数据返回拦截
+  // $axios.onResponse((response) =&gt; {
+  // 	// 状态码异常 跳转到登陆
+  //   // redirect('/login')
+  //   return response
+  // })
+
+  // API.simApi = simApi($axios);
+  // Inject to context as $api
+  const API = {};
+  //AllApi为导出的整个对象
+  //{xxxApi: export default function(), xxxApi: export default function()}
+  for (const name in AllApi) {
+    API[name] = AllApi[name]($axios);
+    // 即{xxxApi: export default function($axios), xxxApi: export default function($axios)}
+  }
+  // 使用this.$api.xxxApi.函数名调用
+  // console.log(API);
+  inject(&quot;api&quot;, API);
+}
+</code></pre>
+<p>在<code> plugins</code> 目录下新建文件夹 <code>api</code>，并在<code>api</code>文件夹下创建<code>index.js</code>文件</p>
+<pre><code>// import simApi from &quot;./api/simApi&quot;;
+const path = require(&quot;path&quot;);
+const files = require.context(&quot;./&quot;, false, /\Api.js$/);
+const AllApi = {};
+// files.keys()是获取的文件名数组
+// path.basename(key, '.js')是获取文件名 xxxApi
+// files(key)是每个文件的内容  .default是文件的export default
+files.keys().forEach((key) =&gt; {
+  const name = path.basename(key, &quot;.js&quot;);
+  AllApi[name] = files(key).default || files(key);
+});
+//导出整个对象{xxxApi: export default function(), xxxApi: export default function()}
+export default AllApi;
+</code></pre>
+<p>最后写各部分api文件，以<code>Api.js</code>命名<br>
+如登录要用的接口<code>loginApi.js</code></p>
+<pre><code>export default ($axios) =&gt; ({
+  login(params) {
+    return $axios.$get(&quot;/xxx/xxxxxx&quot;, { params });
+  },
+  函数名(参数) {
+    return $axios.$post(&quot;接口地址&quot;, { 参数 });
+  },
+});
+</code></pre>
+<p>在<code>vue文件</code>中使用</p>
+<pre><code>&lt;!-- asyncData中使用 --&gt;
+async asyncData({ $api }) {
+    let { loginData, xxx } = await Promise.all([
+      $api.loginApi.login({user: xxx, password: xxx}}),
+      $api.文件名.函数名({xxx})
+    ]).then(([res1, res2]) =&gt; {
+      // console.log(res1, res2);
+      return {
+        loginData: res1,
+        xxx: res2
+      };
+    });
+    return {
+      simData,
+      xxx
+    };
+  },
+&lt;!-- 函数中调用 --&gt;
+this.$api.loginApi
+        .login({user: xxx, password: xxx})
+        .then((res) =&gt; {
+          console.log('data---', res)
+        })
+</code></pre>
+<p><code>axios.js</code>文件常规写法</p>
+<pre><code>import simApi from &quot;./api/simApi&quot;;
+export default function ({ app, $axios, store, redirect }, inject) {
+  // $axios.defaults.baseURL = '';
+  // $axios.defaults.timeout = 5000;
+
+  // $axios.onRequest(config =&gt; {
+  //   // 相关配置
+  //   // config.headers[&quot;X-Access-Token&quot;] = app.$cookies.get(&quot;token&quot;) || &quot;&quot;;
+  //   const token = store.state.user.token;
+  //   if(token) config.headers.token = token;
+  // });
+  // // 服务器返回异常拦截
+  // $axios.onError(error =&gt; {
+  //   return error
+  // })
+  // // 接口数据返回拦截
+  // $axios.onResponse((response) =&gt; {
+  // 	// 状态码异常 跳转到登陆
+  //   // redirect('/login')
+  //   return response
+  // })
+  const API = {};
+  API.simApi = simApi($axios);
+  // Inject to context as $api
+  inject(&quot;api&quot;, API);
+}
+</code></pre>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://Alphatrionty.github.io/tag/technology/" class="tag">
+                    技术相关
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://Alphatrionty.github.io/post/tu-shu-jiao/">
+                  <h3 class="post-title">
+                    图书角
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

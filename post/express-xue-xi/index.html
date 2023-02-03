@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>Express学习 | Alphatrion</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://Alphatrionty.github.io/favicon.ico?v=1675391917901">
+<link rel="stylesheet" href="https://Alphatrionty.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="控制台信息添加颜色
+console.log('\x1B[36m%s\x1B[0m', info);  //cyan  
+console.log('\x1B[33m%s\x1b[0m:', path);  //yellow  
+var sty..." />
+    <meta name="keywords" content="" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://Alphatrionty.github.io">
+        <img src="https://Alphatrionty.github.io/images/avatar.png?v=1675391917901" class="site-logo">
+        <h1 class="site-title">Alphatrion</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      <h1>且听风呤，静待花开</h1>
+    </div>
+    <div class="site-footer">
+      alphatrion | <a class="rss" href="https://Alphatrionty.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">Express学习</h2>
+            <div class="post-date">2023-01-06</div>
+            
+              <div class="feature-container" style="background-image: url('https://Alphatrionty.github.io/post-images/express-xue-xi.jpg')">
+              </div>
+            
+            <div class="post-content" v-pre>
+              <h2 id="控制台信息添加颜色">控制台信息添加颜色</h2>
+<pre><code>console.log('\x1B[36m%s\x1B[0m', info);  //cyan  
+console.log('\x1B[33m%s\x1b[0m:', path);  //yellow  
+var styles = {  
+    'bold'          : ['\x1B[1m',  '\x1B[22m'],  
+    'italic'        : ['\x1B[3m',  '\x1B[23m'],  
+    'underline'     : ['\x1B[4m',  '\x1B[24m'],  
+    'inverse'       : ['\x1B[7m',  '\x1B[27m'],  
+    'strikethrough' : ['\x1B[9m',  '\x1B[29m'],  
+    'white'         : ['\x1B[37m', '\x1B[39m'],  
+    'grey'          : ['\x1B[90m', '\x1B[39m'],  
+   'black'         : ['\x1B[30m', '\x1B[39m'],  
+    'blue'          : ['\x1B[34m', '\x1B[39m'],  
+    'cyan'          : ['\x1B[36m', '\x1B[39m'],  
+    'green'         : ['\x1B[32m', '\x1B[39m'],  
+    'magenta'       : ['\x1B[35m', '\x1B[39m'],  
+    'red'           : ['\x1B[31m', '\x1B[39m'],  
+    'yellow'        : ['\x1B[33m', '\x1B[39m'],  
+    'whiteBG'       : ['\x1B[47m', '\x1B[49m'],  
+    'greyBG'        : ['\x1B[49;5;8m', '\x1B[49m'],  
+    'blackBG'       : ['\x1B[40m', '\x1B[49m'],  
+    'blueBG'        : ['\x1B[44m', '\x1B[49m'],  
+    'cyanBG'        : ['\x1B[46m', '\x1B[49m'],  
+    'greenBG'       : ['\x1B[42m', '\x1B[49m'],  
+    'magentaBG'     : ['\x1B[45m', '\x1B[49m'],  
+    'redBG'         : ['\x1B[41m', '\x1B[49m'],  
+    'yellowBG'      : ['\x1B[43m', '\x1B[49m']  
+};  
+</code></pre>
+<h2 id="中间件类型">中间件类型</h2>
+<ul>
+<li>应用程序级别中间件</li>
+<li>路由级别中间件</li>
+<li>错误处理中间件</li>
+<li>内置中间件</li>
+<li>第三方中间件</li>
+</ul>
+<h2 id="项目实践">项目实践</h2>
+<p><a href="https://gitee.com/mypet_2/pet-community-web">gitee地址</a></p>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://Alphatrionty.github.io/post/axios-feng-zhuang-fang-shi/">
+                  <h3 class="post-title">
+                    axios封装方式
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,799 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://Alphatrionty.github.io</id>
+    <title>Alphatrion</title>
+    <updated>2023-02-03T02:38:47.326Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://Alphatrionty.github.io"/>
+    <link rel="self" href="https://Alphatrionty.github.io/atom.xml"/>
+    <subtitle>&lt;h1&gt;且听风呤，静待花开&lt;/h1&gt;</subtitle>
+    <logo>https://Alphatrionty.github.io/images/avatar.png</logo>
+    <icon>https://Alphatrionty.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2023, Alphatrion</rights>
+    <entry>
+        <title type="html"><![CDATA[Express学习]]></title>
+        <id>https://Alphatrionty.github.io/post/express-xue-xi/</id>
+        <link href="https://Alphatrionty.github.io/post/express-xue-xi/">
+        </link>
+        <updated>2023-01-06T06:54:00.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="控制台信息添加颜色">控制台信息添加颜色</h2>
+<pre><code>console.log('\x1B[36m%s\x1B[0m', info);  //cyan  
+console.log('\x1B[33m%s\x1b[0m:', path);  //yellow  
+var styles = {  
+    'bold'          : ['\x1B[1m',  '\x1B[22m'],  
+    'italic'        : ['\x1B[3m',  '\x1B[23m'],  
+    'underline'     : ['\x1B[4m',  '\x1B[24m'],  
+    'inverse'       : ['\x1B[7m',  '\x1B[27m'],  
+    'strikethrough' : ['\x1B[9m',  '\x1B[29m'],  
+    'white'         : ['\x1B[37m', '\x1B[39m'],  
+    'grey'          : ['\x1B[90m', '\x1B[39m'],  
+   'black'         : ['\x1B[30m', '\x1B[39m'],  
+    'blue'          : ['\x1B[34m', '\x1B[39m'],  
+    'cyan'          : ['\x1B[36m', '\x1B[39m'],  
+    'green'         : ['\x1B[32m', '\x1B[39m'],  
+    'magenta'       : ['\x1B[35m', '\x1B[39m'],  
+    'red'           : ['\x1B[31m', '\x1B[39m'],  
+    'yellow'        : ['\x1B[33m', '\x1B[39m'],  
+    'whiteBG'       : ['\x1B[47m', '\x1B[49m'],  
+    'greyBG'        : ['\x1B[49;5;8m', '\x1B[49m'],  
+    'blackBG'       : ['\x1B[40m', '\x1B[49m'],  
+    'blueBG'        : ['\x1B[44m', '\x1B[49m'],  
+    'cyanBG'        : ['\x1B[46m', '\x1B[49m'],  
+    'greenBG'       : ['\x1B[42m', '\x1B[49m'],  
+    'magentaBG'     : ['\x1B[45m', '\x1B[49m'],  
+    'redBG'         : ['\x1B[41m', '\x1B[49m'],  
+    'yellowBG'      : ['\x1B[43m', '\x1B[49m']  
+};  
+</code></pre>
+<h2 id="中间件类型">中间件类型</h2>
+<ul>
+<li>应用程序级别中间件</li>
+<li>路由级别中间件</li>
+<li>错误处理中间件</li>
+<li>内置中间件</li>
+<li>第三方中间件</li>
+</ul>
+<h2 id="项目实践">项目实践</h2>
+<p><a href="https://gitee.com/mypet_2/pet-community-web">gitee地址</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[axios封装方式]]></title>
+        <id>https://Alphatrionty.github.io/post/axios-feng-zhuang-fang-shi/</id>
+        <link href="https://Alphatrionty.github.io/post/axios-feng-zhuang-fang-shi/">
+        </link>
+        <updated>2022-11-27T01:42:28.000Z</updated>
+        <content type="html"><![CDATA[<pre><code>/**
+ * axios实例封装 instance.js
+ */
+import axios from &quot;axios&quot;;
+import { ElLoading } from &quot;element-plus&quot;;
+
+let baseURL = &quot;&quot;; //请求基础地址
+
+let loadingInstance = null;
+
+// 设置超时时间
+const TIMEOUT = 6000;
+
+if (process.env.NODE_ENV === &quot;production&quot;) {
+  //生产环境
+
+  baseURL = &quot;&quot;;
+} else {
+  //开发环境
+  //   baseURL = &quot;https://dev.gzczzn.com:4587&quot;
+  //   baseURL = &quot;https://dev.gzczzn.com:3939&quot; //公网内测
+  baseURL = &quot;http://192.168.2.232:8685&quot;;
+}
+
+const instance = axios.create({
+  //创建axios实例
+  baseURL,
+  
+  timeout: TIMEOUT
+});
+
+instance.interceptors.request.use(
+  function (config) {
+    // 请求拦截
+
+    loadingInstance = ElLoading.service({ fullscreen: true });
+    return config;
+  },
+  function (error) {
+    // 对请求错误做些什么
+
+    return Promise.reject(error);
+  }
+);
+
+instance.interceptors.response.use(
+  function (response) {
+    // 响应拦截
+
+    loadingInstance &amp;&amp; loadingInstance.close();
+    return response;
+  },
+  function (error) {
+    // 对响应错误做点什么
+
+    return Promise.reject(error);
+  }
+);
+
+export default instance;
+
+</code></pre>
+<p>一、不封装成一个个方法</p>
+<pre><code>/**
+ * 网络请求封装 index.js
+ */
+import instance from &quot;./instance&quot;;
+
+function requestMethod(method) {
+  return function request({ url, data, isParams }) {
+    const _data = isParams ? { url, params: data, method } : { url, data, method };
+
+    return new Promise((resolve, reject) =&gt; {
+      instance(_data)
+        .then(res =&gt; {
+          resolve(res.data);
+        })
+        .catch(err =&gt; {
+          reject(err);
+        });
+    });
+  };
+}
+
+export const $Get = requestMethod(&quot;get&quot;);
+export const $Post = requestMethod(&quot;post&quot;);
+export const $Put = requestMethod(&quot;put&quot;);
+</code></pre>
+<p>使用</p>
+<pre><code>import { $Get } from '../../network';
+
+const params={
+    url:'/user/login',
+    data:{
+      phone: userinfo.value.userName,
+      password: userinfo.value.passWord
+    },
+    isParams:true
+  }
+
+  $Get(params).then(res=&gt;{
+    console.log(res);
+  }).catch(err=&gt;{
+    console.log(err);
+  })
+</code></pre>
+<p>一、封装成一个个方法<br>
+api/对应分部.js</p>
+<pre><code>/**
+ * /xxxxx/xxxxx  接口描述
+ */
+export function 请求函数名(params) {
+  return instance.request({
+    method: &quot;get&quot;,
+    url: &quot;/xxxxx/xxxxx &quot;,
+    params: params,
+    &lt;!-- data: params --&gt;
+  });
+}
+</code></pre>
+<p>使用</p>
+<pre><code>import { 请求函数名 } from 'api/对应分部.js'
+const params={
+      phone:userinfo.value.userName,
+      password:userinfo.value.passWord
+  }
+
+  请求函数名(params).then(res=&gt;{
+    console.log(res);
+  }).catch(err=&gt;{
+    console.log(err);
+  })
+
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[移动端相关]]></title>
+        <id>https://Alphatrionty.github.io/post/yi-dong-duan-xiang-guan/</id>
+        <link href="https://Alphatrionty.github.io/post/yi-dong-duan-xiang-guan/">
+        </link>
+        <updated>2022-11-22T05:47:17.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="移动端点击时会有背景阴影">移动端点击时会有背景阴影</h3>
+<p>解决：-webkit-tap-highlight-color: transparent;</p>
+<h3 id="相关网络资料">相关网络资料</h3>
+<p><strong>在点击产生背景色的元素的css样式上加上以下代码</strong></p>
+<pre><code>-webkit-tap-highlight-color: transparent;
+</code></pre>
+<p>ps：下面看下css取消a标签在移动端点击时的背景颜色</p>
+<p><strong>一、取消a标签在移动端点击时的蓝色</strong></p>
+<pre><code>-webkit-tap-highlight-color: rgba(255, 255, 255, 0);-webkit-user-select: none;-moz-user-focus: none;-moz-user-select: none;
+</code></pre>
+<p><strong>二、使用图片作为a标签的点击按钮时，当触发touchstart的时候，往往会有一个灰色的背景</strong></p>
+<pre><code>a,a:hover,a:active,a:visited,a:link,a:focus{    -webkit-tap-highlight-color:rgba(0,0,0,0);    -webkit-tap-highlight-color: transparent;    outline:none;    background: none;    text-decoration: none;}
+</code></pre>
+<p><strong>三、改变选中内容的背景颜色</strong></p>
+<pre><code>::selection {     background: #FFF;     color: #333; } ::-moz-selection {     background: #FFF;     color: #333; } ::-webkit-selection {     background: #FFF;     color: #333; } 
+</code></pre>
+<p><strong>四、去除ios input框点击时的灰色背景</strong></p>
+<pre><code>-webkit-tap-highlight-color:rgba(0,0,0,0);
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[CSS属性学习（一）]]></title>
+        <id>https://Alphatrionty.github.io/post/css-shu-xing-xue-xi-yi/</id>
+        <link href="https://Alphatrionty.github.io/post/css-shu-xing-xue-xi-yi/">
+        </link>
+        <updated>2022-11-07T08:43:44.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="掘金博主">🎨<a href="https://juejin.cn/user/2330620350437678">掘金博主</a></h3>
+<h3 id="掘金博主-2">🎨<a href="https://juejin.cn/user/3280598430652264">掘金博主</a></h3>
+<h3 id="box-shadow-在线效果">🎨<a href="https://neumorphism.io/">box-shadow 在线效果 </a></h3>
+<h3 id="box-shadow-在线效果-2">🎨<a href="https://shadows.brumm.af/">box-shadow 在线效果 </a></h3>
+<h3 id="贝塞尔曲线在线效果">🎨<a href="https://easings.co/">贝塞尔曲线在线效果</a></h3>
+<h3 id="精灵图快速生成">🎨<a href="https://www.toptal.com/developers/css/sprite-generator">精灵图快速生成</a></h3>
+<h3 id="优秀网站设计">🎨<a href="https://onepagelove.com/">优秀网站设计</a></h3>
+<h3 id="background-clip-text">🎈background-clip: text</h3>
+<p>文字背景为图片</p>
+<h3 id="user-select">🎈user-select</h3>
+<p>不允许选中</p>
+<h3 id="focus-within">🎈:focus-within</h3>
+<p>选中元素匹配<br>
+示例： 🎨<a href="https://juejin.cn/post/6970979674092634120">账号密码登录，熊猫捂眼睛</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[随志第三期]]></title>
+        <id>https://Alphatrionty.github.io/post/sui-zhi-di-san-qi/</id>
+        <link href="https://Alphatrionty.github.io/post/sui-zhi-di-san-qi/">
+        </link>
+        <updated>2022-10-24T06:31:50.000Z</updated>
+        <summary type="html"><![CDATA[<p>🥶RNG又倒在八强，青春结束了</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>🥶RNG又倒在八强，青春结束了</p>
+<!-- more -->
+<h3 id="rng和edg均倒在八强-四强jdg-vs-t1gen-vs-drx">🤕 <strong>RNG和EDG均倒在八强   四强JDG vs T1,GEN vs DRX</strong></h3>
+<p>10/21  <strong>JDG 3:0 RGE</strong>晋级四强<br>
+10/22  <strong>T1 3:0 RNG</strong>晋级四强<br>
+10/23  <strong>GEN 3:2 DK</strong>晋级四强<br>
+10/24  <strong>DRX 3:2 EDG</strong>晋级四强</p>
+<h3 id="️-加入fighting-design">✍️ <strong>加入<a href="https://fighting.tianyuhao.cn/">Fighting Design</a></strong></h3>
+<figure data-type="image" tabindex="1"><img src="https://Alphatrionty.github.io/post-images/1666593701688.jpg" alt="" loading="lazy"></figure>
+<h3 id="jdg和gen倒在四强-决赛t1-vs-drx">🚨 <strong>JDG和GEN倒在四强  决赛T1 vs DRX</strong></h3>
+<p>10/30 <strong>T1 3:1 JDG</strong><br>
+10/31 <strong>DRX 3:1 GEN</strong></p>
+<h3 id="网易和暴雪谈崩">🚨 <strong>网易和暴雪谈崩</strong></h3>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[nuxt2axios自动注册接口]]></title>
+        <id>https://Alphatrionty.github.io/post/nuxt2axios-zi-dong-zhu-ce-jie-kou/</id>
+        <link href="https://Alphatrionty.github.io/post/nuxt2axios-zi-dong-zhu-ce-jie-kou/">
+        </link>
+        <updated>2022-10-20T07:44:08.000Z</updated>
+        <summary type="html"><![CDATA[<p>💎根据一些文章摸索出来的方法</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>💎根据一些文章摸索出来的方法</p>
+<!-- more -->
+<p>首先安装<code>@/plugins/axios</code>并在<code>nuxt.config.js</code>引入</p>
+<pre><code>plugins: [&quot;@/plugins/axios&quot;],
+modules: [
+    &quot;@nuxtjs/axios&quot;,
+    // 是否开启跨域代理配置 根据项目酌情选择
+    &quot;@nuxtjs/proxy&quot;
+  ],
+axios: {
+    // baseURL: &quot;xxx&quot;,
+    // proxy: true,
+    // credentials: true,
+    proxy: true,
+    prefix: &quot;/api/&quot;,
+  },
+  proxy: {
+    &quot;/api/&quot;: {
+      target: &quot;&quot;, // 目标服务器ip
+      pathRewrite: {
+        &quot;^/api/&quot;: &quot;/&quot;, // 把 /api 替换成 /
+        // changeOrigin: true // 是否跨域
+      },
+    },
+  },
+</code></pre>
+<p>在<code> plugins</code> 目录下新建文件 <code>axios.js</code></p>
+<pre><code>import AllApi from &quot;./api/index&quot;; //导入整个api对象
+
+export default function ({ app, $axios, store, redirect }, inject) {
+  // $axios.defaults.baseURL = '';
+  // $axios.defaults.timeout = 5000;
+
+  // $axios.onRequest(config =&gt; {
+  //   // 相关配置
+  //   // config.headers[&quot;X-Access-Token&quot;] = app.$cookies.get(&quot;token&quot;) || &quot;&quot;;
+  //   const token = store.state.user.token;
+  //   if(token) config.headers.token = token;
+  // });
+  // // 服务器返回异常拦截
+  // $axios.onError(error =&gt; {
+  //   return error
+  // })
+  // // 接口数据返回拦截
+  // $axios.onResponse((response) =&gt; {
+  // 	// 状态码异常 跳转到登陆
+  //   // redirect('/login')
+  //   return response
+  // })
+
+  // API.simApi = simApi($axios);
+  // Inject to context as $api
+  const API = {};
+  //AllApi为导出的整个对象
+  //{xxxApi: export default function(), xxxApi: export default function()}
+  for (const name in AllApi) {
+    API[name] = AllApi[name]($axios);
+    // 即{xxxApi: export default function($axios), xxxApi: export default function($axios)}
+  }
+  // 使用this.$api.xxxApi.函数名调用
+  // console.log(API);
+  inject(&quot;api&quot;, API);
+}
+</code></pre>
+<p>在<code> plugins</code> 目录下新建文件夹 <code>api</code>，并在<code>api</code>文件夹下创建<code>index.js</code>文件</p>
+<pre><code>// import simApi from &quot;./api/simApi&quot;;
+const path = require(&quot;path&quot;);
+const files = require.context(&quot;./&quot;, false, /\Api.js$/);
+const AllApi = {};
+// files.keys()是获取的文件名数组
+// path.basename(key, '.js')是获取文件名 xxxApi
+// files(key)是每个文件的内容  .default是文件的export default
+files.keys().forEach((key) =&gt; {
+  const name = path.basename(key, &quot;.js&quot;);
+  AllApi[name] = files(key).default || files(key);
+});
+//导出整个对象{xxxApi: export default function(), xxxApi: export default function()}
+export default AllApi;
+</code></pre>
+<p>最后写各部分api文件，以<code>Api.js</code>命名<br>
+如登录要用的接口<code>loginApi.js</code></p>
+<pre><code>export default ($axios) =&gt; ({
+  login(params) {
+    return $axios.$get(&quot;/xxx/xxxxxx&quot;, { params });
+  },
+  函数名(参数) {
+    return $axios.$post(&quot;接口地址&quot;, { 参数 });
+  },
+});
+</code></pre>
+<p>在<code>vue文件</code>中使用</p>
+<pre><code>&lt;!-- asyncData中使用 --&gt;
+async asyncData({ $api }) {
+    let { loginData, xxx } = await Promise.all([
+      $api.loginApi.login({user: xxx, password: xxx}}),
+      $api.文件名.函数名({xxx})
+    ]).then(([res1, res2]) =&gt; {
+      // console.log(res1, res2);
+      return {
+        loginData: res1,
+        xxx: res2
+      };
+    });
+    return {
+      simData,
+      xxx
+    };
+  },
+&lt;!-- 函数中调用 --&gt;
+this.$api.loginApi
+        .login({user: xxx, password: xxx})
+        .then((res) =&gt; {
+          console.log('data---', res)
+        })
+</code></pre>
+<p><code>axios.js</code>文件常规写法</p>
+<pre><code>import simApi from &quot;./api/simApi&quot;;
+export default function ({ app, $axios, store, redirect }, inject) {
+  // $axios.defaults.baseURL = '';
+  // $axios.defaults.timeout = 5000;
+
+  // $axios.onRequest(config =&gt; {
+  //   // 相关配置
+  //   // config.headers[&quot;X-Access-Token&quot;] = app.$cookies.get(&quot;token&quot;) || &quot;&quot;;
+  //   const token = store.state.user.token;
+  //   if(token) config.headers.token = token;
+  // });
+  // // 服务器返回异常拦截
+  // $axios.onError(error =&gt; {
+  //   return error
+  // })
+  // // 接口数据返回拦截
+  // $axios.onResponse((response) =&gt; {
+  // 	// 状态码异常 跳转到登陆
+  //   // redirect('/login')
+  //   return response
+  // })
+  const API = {};
+  API.simApi = simApi($axios);
+  // Inject to context as $api
+  inject(&quot;api&quot;, API);
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[图书角]]></title>
+        <id>https://Alphatrionty.github.io/post/tu-shu-jiao/</id>
+        <link href="https://Alphatrionty.github.io/post/tu-shu-jiao/">
+        </link>
+        <updated>2022-09-27T02:34:51.000Z</updated>
+        <summary type="html"><![CDATA[<p>📚一些存放在外网的电子书，可直接下载</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>📚一些存放在外网的电子书，可直接下载</p>
+<!-- more -->
+<p><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E4%B9%99%E4%B8%80">乙一</a>
+<ul>
+<li><a href="#%E5%A4%8F%E5%A4%A9-%E7%83%9F%E7%81%AB%E5%92%8C%E6%88%91%E7%9A%84%E5%B0%B8%E4%BD%93"><strong>《夏天、烟火和我的尸体》</strong></a></li>
+<li><a href="#%E5%8F%AA%E6%9C%89%E4%BD%A0%E5%90%AC%E5%88%B0"><strong>《只有你听到》</strong></a></li>
+<li><a href="#%E5%8A%A8%E7%89%A9%E5%9B%AD"><strong>《动物园》</strong></a></li>
+<li><a href="#%E5%B0%86%E6%AD%BB%E6%9C%AA%E6%AD%BB%E7%9A%84%E9%9D%92"><strong>《将死未死的青》</strong></a></li>
+<li><a href="#%E5%B9%B3%E9%9D%A2%E7%8A%AC"><strong>《平面犬》</strong></a></li>
+<li><a href="#%E6%9D%80%E6%AD%BB%E7%8E%9B%E4%B8%BD%E8%8B%8F"><strong>《杀死玛丽苏》</strong></a></li>
+<li><a href="#%E5%9C%A8%E9%BB%91%E6%9A%97%E4%B8%AD%E7%AD%89"><strong>《在黑暗中等》</strong></a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%9C%E9%87%8E%E5%9C%AD%E5%90%BE">东野圭吾</a>
+<ul>
+<li><a href="#%E7%99%BD%E5%A4%9C%E8%A1%8C"><strong>《白夜行》</strong></a></li>
+<li><a href="#%E8%A7%A3%E5%BF%A7%E6%9D%82%E8%B4%A7%E5%BA%97"><strong>《解忧杂货店》</strong></a></li>
+<li><a href="#%E6%81%B6%E6%84%8F"><strong>《恶意》</strong></a></li>
+<li><a href="#%E5%AB%8C%E7%96%91%E4%BA%BAx%E7%9A%84%E7%8C%AE%E8%BA%AB"><strong>《嫌疑人x的献身》</strong></a></li>
+<li><a href="#%E6%B2%89%E9%BB%98%E7%9A%84%E5%B7%A1%E6%B8%B8"><strong>《沉默的巡游》</strong></a></li>
+<li><a href="#%E5%B8%8C%E6%9C%9B%E4%B9%8B%E7%BA%BF"><strong>《希望之线》</strong></a></li>
+</ul>
+</li>
+<li><a href="#%E5%85%B6%E4%BB%96">其他</a>
+<ul>
+<li><a href="#%E5%8D%81%E5%AE%97%E7%BD%AA%E5%85%A8%E9%9B%86"><strong>《十宗罪全集》</strong></a></li>
+<li><a href="#%E7%86%8A%E9%95%87"><strong>《熊镇 》</strong></a></li>
+<li><a href="#%E7%86%8A%E9%95%872"><strong>《熊镇2》</strong></a></li>
+<li><a href="#%E4%BA%91%E8%BE%B9%E6%9C%89%E4%B8%AA%E5%B0%8F%E5%8D%96%E9%83%A8"><strong>《云边有个小卖部》</strong></a></li>
+<li><a href="#%E6%9C%88%E4%BA%AE%E4%B8%8E%E5%85%AD%E4%BE%BF%E5%A3%AB"><strong>《月亮与六便士》</strong></a></li>
+<li><a href="#%E5%88%AB%E6%83%B3%E5%A4%AA%E5%A4%9A%E5%95%A6"><strong>《别想太多啦》</strong></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
+<h2 id="乙一">乙一</h2>
+<h3 id="夏天-烟火和我的尸体"><strong><a href="https://link.storjshare.io/jug4dih3ar4j7rzwpcv36twezynq/demo-bucket%2Fbook%2Flight%2F%E5%A4%8F%E5%A4%A9%E3%80%81%E7%83%9F%E7%81%AB%E5%92%8C%E6%88%91%E7%9A%84%E5%B0%B8%E4%BD%93-%E4%B9%99%E4%B8%80.pdf">《夏天、烟火和我的尸体》</a></strong></h3>
+<figure data-type="image" tabindex="1"><img src="https://Alphatrionty.github.io/post-images/1664247209125.jpg" alt="" loading="lazy"></figure>
+<h3 id="只有你听到"><strong><a href="https://link.storjshare.io/jwd72q3ipfjaxsr5s3a4s5lh3yxq/demo-bucket%2Fbook%2Flight%2F%E5%8F%AA%E6%9C%89%E4%BD%A0%E5%90%AC%E5%88%B0-%E4%B9%99%E4%B8%80.pdf">《只有你听到》</a></strong></h3>
+<figure data-type="image" tabindex="2"><img src="https://Alphatrionty.github.io/post-images/1664339034790.jpg" alt="" loading="lazy"></figure>
+<h3 id="动物园"><strong><a href="https://link.storjshare.io/jxz6lyq76xxjnir7jquzpa2y3yhq/demo-bucket%2Fbook%2Flight%2F%E5%8A%A8%E7%89%A9%E5%9B%AD-%E4%B9%99%E4%B8%80.pdf">《动物园》</a></strong></h3>
+<figure data-type="image" tabindex="3"><img src="https://Alphatrionty.github.io/post-images/1664419352191.jpg" alt="" loading="lazy"></figure>
+<h3 id="将死未死的青"><strong><a href="https://link.storjshare.io/jwkcws42wf3jr72c6cvaedymzvpq/demo-bucket%2Fbook%2Flight%2F%E5%B0%86%E6%AD%BB%E6%9C%AA%E6%AD%BB%E7%9A%84%E9%9D%92-%E4%B9%99%E4%B8%80.pdf">《将死未死的青》</a></strong></h3>
+<figure data-type="image" tabindex="4"><img src="https://Alphatrionty.github.io/post-images/1664419398282.jpg" alt="" loading="lazy"></figure>
+<h3 id="平面犬"><strong><a href="https://link.storjshare.io/jujq2b2debz7i52p45p3djvie3qq/demo-bucket%2Fbook%2Flight%2F%E5%B9%B3%E9%9D%A2%E7%8A%AC-%E4%B9%99%E4%B8%80.pdf">《平面犬》</a></strong></h3>
+<figure data-type="image" tabindex="5"><img src="https://Alphatrionty.github.io/post-images/1664419420534.jpg" alt="" loading="lazy"></figure>
+<h3 id="杀死玛丽苏"><strong><a href="https://link.storjshare.io/jurngry7pej3ulticjxb7wipiq3q/demo-bucket%2Fbook%2Flight%2F%E6%9D%80%E6%AD%BB%E7%8E%9B%E4%B8%BD%E8%8B%8F-%E4%B9%99%E4%B8%80.pdf">《杀死玛丽苏》</a></strong></h3>
+<figure data-type="image" tabindex="6"><img src="https://Alphatrionty.github.io/post-images/1664419442392.jpg" alt="" loading="lazy"></figure>
+<h3 id="在黑暗中等"><strong><a href="https://link.storjshare.io/ju4rq5pkhxaqmvn6ceng3xys6nxq/demo-bucket%2Fbook%2Flight%2F%E5%9C%A8%E9%BB%91%E6%9A%97%E4%B8%AD%E7%AD%89-%E4%B9%99%E4%B8%80.pdf">《在黑暗中等》</a></strong></h3>
+<figure data-type="image" tabindex="7"><img src="https://Alphatrionty.github.io/post-images/1664419460579.jpg" alt="" loading="lazy"></figure>
+<h2 id="东野圭吾">东野圭吾</h2>
+<h3 id="白夜行"><strong><a href="https://link.storjshare.io/jwfvottz37c3vxkz2mktlf5hegca/demo-bucket%2Fbook%2Flight%2F%E7%99%BD%E5%A4%9C%E8%A1%8C-%E4%B8%9C%E9%87%8E%E5%9C%AD%E5%90%BE.pdf">《白夜行》</a></strong></h3>
+<figure data-type="image" tabindex="8"><img src="https://Alphatrionty.github.io/post-images/1664247253691.jpg" alt="" loading="lazy"></figure>
+<h3 id="解忧杂货店"><strong><a href="https://link.storjshare.io/jvzlpozamoj52z4q7mcmc5cyjefa/demo-bucket%2Fbook%2Flight%2F%E8%A7%A3%E5%BF%A7%E6%9D%82%E8%B4%A7%E5%BA%97-%E4%B8%9C%E9%87%8E%E5%9C%AD%E5%90%BE.pdf">《解忧杂货店》</a></strong></h3>
+<figure data-type="image" tabindex="9"><img src="https://Alphatrionty.github.io/post-images/1664247258708.jpg" alt="" loading="lazy"></figure>
+<h3 id="恶意"><strong><a href="https://link.storjshare.io/juufeehg5kfbyzfvhgdshil2z6sq/demo-bucket%2Fbook%2Flight%2F%E6%81%B6%E6%84%8F-%E4%B8%9C%E9%87%8E%E5%9C%AD%E5%90%BE.pdf">《恶意》</a></strong></h3>
+<figure data-type="image" tabindex="10"><img src="https://Alphatrionty.github.io/post-images/1664247265317.jpg" alt="" loading="lazy"></figure>
+<h3 id="嫌疑人x的献身"><strong><a href="https://link.storjshare.io/jvrxkukg7kyqrpu6ldftiv6rkvtq/demo-bucket%2Fbook%2Flight%2F%E5%AB%8C%E7%96%91%E4%BA%BAX%E7%9A%84%E7%8C%AE%E8%BA%AB.pdf">《嫌疑人x的献身》</a></strong></h3>
+<figure data-type="image" tabindex="11"><img src="https://Alphatrionty.github.io/post-images/1664338809134.jpg" alt="" loading="lazy"></figure>
+<h3 id="沉默的巡游"><strong><a href="https://link.storjshare.io/jwb3igfuufzfb3qkj4kg4nji4jla/demo-bucket%2Fbook%2Flight%2F%E6%B2%89%E9%BB%98%E7%9A%84%E5%B7%A1%E6%B8%B8.pdf">《沉默的巡游》</a></strong></h3>
+<figure data-type="image" tabindex="12"><img src="https://Alphatrionty.github.io/post-images/1664520404499.jpg" alt="" loading="lazy"></figure>
+<h3 id="希望之线"><strong><a href="https://link.storjshare.io/jufcm6xkfq2mqwdnydh6ssfxcayq/demo-bucket%2Fbook%2Flight%2F%E5%B8%8C%E6%9C%9B%E4%B9%8B%E7%BA%BF.pdf">《希望之线》</a></strong></h3>
+<figure data-type="image" tabindex="13"><img src="https://Alphatrionty.github.io/post-images/1664520465024.jpg" alt="" loading="lazy"></figure>
+<h2 id="其他">其他</h2>
+<h3 id="十宗罪全集"><strong><a href="https://link.storjshare.io/jxbengkaiu6mc5ab7rwbwip2f4mq/demo-bucket%2Fbook%2Flight%2F%E5%8D%81%E5%AE%97%E7%BD%AA%E5%85%A8%E9%9B%86.pdf">《十宗罪全集》</a></strong></h3>
+<figure data-type="image" tabindex="14"><img src="https://Alphatrionty.github.io/post-images/1664247227012.jpg" alt="" loading="lazy"></figure>
+<h3 id="熊镇"><strong><a href="https://link.storjshare.io/juzvdzbyvivdve7dmbk6qe4dffxq/demo-bucket%2Fbook%2Flight%2F%E7%86%8A%E9%95%87.pdf">《熊镇 》</a></strong></h3>
+<figure data-type="image" tabindex="15"><img src="https://Alphatrionty.github.io/post-images/1664339546205.jpg" alt="" loading="lazy"></figure>
+<h3 id="熊镇2"><strong><a href="https://link.storjshare.io/jwewabw5xiemxdjqci5elx23feja/demo-bucket%2Fbook%2Flight%2F%E7%86%8A%E9%95%872.pdf">《熊镇2》</a></strong></h3>
+<figure data-type="image" tabindex="16"><img src="https://Alphatrionty.github.io/post-images/1664339733448.jpg" alt="" loading="lazy"></figure>
+<h3 id="云边有个小卖部"><strong><a href="https://link.storjshare.io/jv5kextyf7ore3zfti5k5gd3nldq/demo-bucket%2Fbook%2Flight%2F%E4%BA%91%E8%BE%B9%E6%9C%89%E4%B8%AA%E5%B0%8F%E5%8D%96%E9%83%A8.pdf">《云边有个小卖部》</a></strong></h3>
+<figure data-type="image" tabindex="17"><img src="https://Alphatrionty.github.io/post-images/1664247399589.jpg" alt="" loading="lazy"></figure>
+<h3 id="月亮与六便士"><strong><a href="https://link.storjshare.io/jugit4cuzhq5duqh4dksza6y3qwq/demo-bucket%2Fbook%2Flight%2F%E6%9C%88%E4%BA%AE%E4%B8%8E%E5%85%AD%E4%BE%BF%E5%A3%AB.pdf">《月亮与六便士》</a></strong></h3>
+<figure data-type="image" tabindex="18"><img src="https://Alphatrionty.github.io/post-images/1664339740558.jpg" alt="" loading="lazy"></figure>
+<h3 id="别想太多啦"><strong><a href="https://link.storjshare.io/jw3wky2aeosg243l3hfwawzi4sya/demo-bucket%2Fbook%2Flight%2F%E5%88%AB%E6%83%B3%E5%A4%AA%E5%A4%9A%E5%95%A6.pdf">《别想太多啦》</a></strong></h3>
+<figure data-type="image" tabindex="19"><img src="https://Alphatrionty.github.io/post-images/1664247377281.jpg" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[随志第二期]]></title>
+        <id>https://Alphatrionty.github.io/post/sui-zhi-di-er-qi/</id>
+        <link href="https://Alphatrionty.github.io/post/sui-zhi-di-er-qi/">
+        </link>
+        <updated>2022-09-17T01:08:53.000Z</updated>
+        <summary type="html"><![CDATA[<p>🦇“最干净的地方”发现微塑料，环境问题日益严重</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>🦇“最干净的地方”发现微塑料，环境问题日益严重</p>
+<!-- more -->
+<h3 id="南极洲雪中发现微塑料">🌏 <strong>南极洲雪中发现微塑料</strong></h3>
+<p>科研人员从南极洲最大的冰架——罗斯冰架沿线的不同地点采集了19个雪样本，在每个样本中都发现了微塑料，这可能意味着塑料污染对生态环境的破坏在加速，即便是被科研人员称为地球上“最干净”的地方——南极洲也无法幸免。科学家曾在该地区的深海沉积物、海洋和地表水中发现过微塑料，但在雪样中发现微塑料尚属首次。直径小于5毫米的塑料颗粒被泛称为“微塑料”。</p>
+<h3 id="nealfun">🏑 <strong><a href="https://neal.fun/">neal.fun</a></strong></h3>
+<p>一个集成很多有趣网页的网页，可供选择的电车难题，深海生物等</p>
+<h3 id="z-library">📘 <strong><a href="https://zh.b-ok.asia/">Z-library</a></strong></h3>
+<p>号称全球最大的电子图书馆(需翻墙)。国内网(www.zhelper.net)</p>
+<h3 id="外网存储">💼 <strong><a href="https://us1.storj.io/">外网存储</a></strong></h3>
+<p>每个月有150g的免费存储额度和流量1-6qaz。</p>
+<h3 id="2022916重庆发现一例境外输入猴痘病例">🌚 <strong>2022/9/16重庆发现一例境外输入猴痘病例</strong></h3>
+<p>已被隔离治疗，情况稳定，其密切接触者均已落实隔离医学观察措施。</p>
+<h3 id="2022916长沙电信大楼起火">🔥 <strong>2022/9/16长沙电信大楼起火</strong></h3>
+<figure data-type="image" tabindex="1"><img src="https://Alphatrionty.github.io/post-images/1663377658929.png" alt="" loading="lazy"></figure>
+<h3 id="2022917印度多地爆发牛块状皮肤病">😱 <strong>2022/9/17印度多地爆发牛块状皮肤病</strong></h3>
+<p>超170万头牛感染，超7.5万头牛死亡，病毒来自受感染的蚊子和苍蝇。</p>
+<h3 id="有意思的网站">🏙 <strong><a href="https://obsoletenerd.com/">有意思的网站</a></strong></h3>
+<figure data-type="image" tabindex="2"><img src="https://Alphatrionty.github.io/post-images/1663405685643.png" alt="" loading="lazy"></figure>
+<h3 id="怀旧游戏网站">🏸 <strong><a href="https://nesbox.xianqiao.wang/">怀旧游戏网站</a></strong></h3>
+<p>NESBox 预计有 1000+ 游戏（现在已上线 40+）。可参考这篇<a href="https://juejin.cn/post/7136883410819088397">介绍文章</a>。</p>
+<h3 id="有意思的计时网">🌗 <strong><a href="https://rectangles.app/">有意思的计时网</a></strong></h3>
+<p>这个网页上，一个方块代表10分钟，一天24小时就是144个方块。可以一眼看到，当天还有多少个方块空着。</p>
+<h3 id="乔布斯档案">🎅 <strong><a href="https://stevejobsarchive.com/">乔布斯档案</a></strong></h3>
+<p>乔布斯家人建立的网站，用来为后人保存史蒂夫·乔布斯的各种材料。刚刚建立，内容还比较少，里面有音频和视频。</p>
+<h3 id="it王子">🎓 <strong><a href="https://www.itwangzi.cn/">IT王子</a></strong></h3>
+<p>每天可以签到得五毛钱，用来买慕课课程。</p>
+<h3 id="高德地图">🗺 <strong>高德地图</strong></h3>
+<p><img src="https://Alphatrionty.github.io/post-images/1663408794988.webp" alt="" loading="lazy"><br>
+有一个功能，如果某条道路发生严重堵塞，它会为堵在这条路上的人，自动建一个聊天群。<br>
+<strong>中秋出行，就发现了高德的堵车群聊，虽然不能解决堵车的问题，但好歹让我知道了是前方五车追尾导致的临时封路，当你了解到原因后，堵车似乎就没那么难受了。——网友如是说</strong></p>
+<h3 id="从事姑息治疗的护士bronnie-ware分享收集的人生遗憾列表">👩 <strong><a href="https://go123.live/explore-other-regrets-of-the-dying/">从事姑息治疗的护士Bronnie Ware分享收集的人生遗憾列表</a></strong></h3>
+<p><img src="https://Alphatrionty.github.io/post-images/1663409037964.webp" alt="" loading="lazy"><br>
+不要忽视梦想——希望我有勇气过自己真正想要的生活。<br>
+不要工作过久——希望我以前没有那么拼命的工作。<br>
+说出想法——希望我有足够的勇气表达自己的感受。<br>
+结交朋友——希望我能够和自己的朋友们一直保持联系。<br>
+保持开心——希望我已经让自己成为快乐的人。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[leetCode篇二]]></title>
+        <id>https://Alphatrionty.github.io/post/leetcode/</id>
+        <link href="https://Alphatrionty.github.io/post/leetcode/">
+        </link>
+        <updated>2022-09-14T07:08:32.000Z</updated>
+        <summary type="html"><![CDATA[<p>✨整理刷过的leetCode...</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>✨整理刷过的leetCode...</p>
+<!-- more -->
+<h3 id="495提莫攻击"><a href="https://leetcode.cn/problems/teemo-attacking/">🤣495.提莫攻击</a></h3>
+<pre><code>var findPoisonedDuration = function(timeSeries, duration) {
+    let res = 0;    //中毒持续的时间
+    for(let i = 1;i &lt; timeSeries.length;i++) {
+        if(timeSeries[i] - timeSeries[i-1] &lt;= duration) { //如果间隔小于或等于中毒时间
+            res += timeSeries[i] - timeSeries[i-1];
+        }else {
+            res += duration;
+        }
+    }
+    return res + duration;  //加上最后一位没算上的中毒时间
+};
+</code></pre>
+<h3 id="463岛屿的周长"><a href="https://leetcode.cn/problems/island-perimeter/">🔒463.岛屿的周长</a></h3>
+<p>一块土地原则上会带来 4 个周长，但岛上的土地存在接壤，每一条接壤，会减掉 2 个边长。<br>
+所以，总周长 = 4 * 土地个数 - 2 * 接壤边的条数。<br>
+<img src="https://Alphatrionty.github.io/post-images/1663210818246.png" alt="" loading="lazy"><br>
+遍历矩阵，遍历到土地，就 land++，如果它的右/下边也是土地，则 border++，遍历结束后代入公式。</p>
+<pre><code>var islandPerimeter = function(grid) {
+    alone = 0;
+    together = 0;
+    for(let i = 0;i &lt; grid.length;i++) {
+        for(let j = 0;j &lt; grid[0].length;j++) {
+            if(grid[i][j] === 1) {
+                alone++;
+                if(i &lt; grid.length - 1 &amp;&amp; grid[i+1][j] === 1) {
+                    together++;
+                }
+                if(j &lt; grid[0].length - 1 &amp;&amp; grid[i][j+1] === 1) {
+                    together++;
+                }
+            }
+        }
+    }
+    return alone * 4 - together * 2;
+};
+</code></pre>
+<h3 id="455分发饼干"><a href="https://leetcode.cn/problems/assign-cookies/">🔒455.分发饼干</a></h3>
+<p>先将两个数组升序排序，从两个数组的开头进行比较。如果一个饼干不能满足，则丢弃，因为排序过，所以不可能满足后面的小孩，只能拿更大的饼干来满足当前的小孩。</p>
+<pre><code>var findContentChildren = function(g, s) {
+    g.sort((a,b) =&gt; a-b);  //a-b升序，b-a降序
+    s.sort((a,b) =&gt; a-b);
+    let i = 0;
+    let j = 0;
+    while(i &lt; g.length &amp;&amp; j &lt; s.length) {
+        if(g[i] &lt;= s[j]) {
+            i++;
+        }
+        j++;  //因为排序过了
+    }
+    return i;
+};
+</code></pre>
+<h3 id="860柠檬水找零"><a href="https://leetcode.cn/problems/lemonade-change/">🔒860.柠檬水找零</a></h3>
+<p>只有三个数字：5，10，20；5是很重要的面值，要想找最多的零，就必须有10先用10。可以将情况分为三种，对应情况使用对应面值组合。如果遇到找不了零的直接返回false。</p>
+<pre><code>var lemonadeChange = function(bills) {
+    if(bills[0] != 5){
+        return false;
+    }
+    var five = 0;
+    var ten = 0;
+    for(let i = 0;i &lt; bills.length; i++){
+        if(bills[i] === 5){
+            five++;
+        }else if(bills[i] === 10 &amp;&amp; five &gt; 0){
+            five--;
+            ten++;
+        }else{
+            if(five &gt; 0 &amp;&amp; ten &gt; 0){
+                five--;
+                ten--;
+            }else if(five &gt; 2){
+                five -= 3;
+            }else{
+                return false
+            }
+        }
+    }
+    return true;
+};
+</code></pre>
+<h3 id="804唯一摩尔斯密码词"><a href="https://leetcode.cn/problems/unique-morse-code-words/">🔒804.唯一摩尔斯密码词</a></h3>
+<p>一开始是想用map对象，看了评论后才想到用数组更方便，字母转为ASCII表可分别对应摩尔斯的下标，直接用下标取值。用Set函数去重，得到长度。</p>
+<pre><code>var uniqueMorseRepresentations = function(words) {
+    var moss = [&quot;.-&quot;,&quot;-...&quot;,&quot;-.-.&quot;,&quot;-..&quot;,&quot;.&quot;,&quot;..-.&quot;,&quot;--.&quot;,&quot;....&quot;,&quot;..&quot;,&quot;.---&quot;,&quot;-.-&quot;,&quot;.-..&quot;,
+    &quot;--&quot;,&quot;-.&quot;,&quot;---&quot;,&quot;.--.&quot;,&quot;--.-&quot;,&quot;.-.&quot;,&quot;...&quot;,&quot;-&quot;,&quot;..-&quot;,&quot;...-&quot;,&quot;.--&quot;,&quot;-..-&quot;,&quot;-.--&quot;,&quot;--..&quot;];
+    var set = new Set();
+    for(let i = 0;i &lt; words.length;i++) {
+        let str = '';
+        for(let j = 0;j &lt; words[i].length;j++) {
+            str += moss[words[i].charCodeAt(j) - 97];
+        }
+        set.add(str);
+    }
+    return set.size;
+};
+</code></pre>
+<h3 id="136只出现一次的数字"><a href="https://leetcode.cn/problems/single-number/">🔒136.只出现一次的数字</a></h3>
+<p><strong>可以使用异或直接得到结果</strong><br>
+交换律：a ^ b ^ c &lt;=&gt; a ^ c ^ b<br>
+任何数于0异或为任何数 0 ^ n =&gt; n<br>
+相同的数异或为0: n ^ n =&gt; 0<br>
+var a = [2,3,2,4,4]<br>
+2 ^ 3 ^ 2 ^ 4 ^ 4等价于 2 ^ 2 ^ 4 ^ 4 ^ 3 =&gt; 0 ^ 0 ^3 =&gt; 3</p>
+<pre><code>var singleNumber = function(nums) {
+    if(nums.length === 1) {
+        return nums[0];
+    }
+    let res = nums[0];
+    for(let i = 1;i &lt; nums.length;i++) {
+        res = res ^ nums[i];
+    }
+    return res;
+};
+</code></pre>
+<p><strong>或者使用数学方法，因为只有一个数字是出现一次；去重后翻倍便是全部数字出现两次，减去原数组，得到结果</strong></p>
+<pre><code>var singleNumber = function(nums) {
+    let total = nums.reduce((prev,next) =&gt; {
+        return prev + next;
+    })
+    let set = new Set(nums)
+    let setTotal = [...set].reduce((prev,next) =&gt; {
+        return prev + next;
+    })
+    return 2 * setTotal - total;
+};
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[OSS使用]]></title>
+        <id>https://Alphatrionty.github.io/post/oss-shi-yong/</id>
+        <link href="https://Alphatrionty.github.io/post/oss-shi-yong/">
+        </link>
+        <updated>2022-09-03T02:23:19.000Z</updated>
+        <summary type="html"><![CDATA[<p>🎈分享初次使用阿里云OSS</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>🎈分享初次使用阿里云OSS</p>
+<!-- more -->
+<h3 id="1创建bucket"><strong>1.创建bucket</strong></h3>
+<figure data-type="image" tabindex="1"><img src="https://Alphatrionty.github.io/post-images/1662171975835.jpg" alt="" loading="lazy"></figure>
+<h3 id="2创建子用户"><strong>2.创建子用户</strong></h3>
+<figure data-type="image" tabindex="2"><img src="https://Alphatrionty.github.io/post-images/1662172045604.jpg" alt="" loading="lazy"></figure>
+<h3 id="3给子用户授权"><strong>3.给子用户授权</strong></h3>
+<figure data-type="image" tabindex="3"><img src="https://Alphatrionty.github.io/post-images/1662172120264.jpg" alt="" loading="lazy"></figure>
+<h3 id="4bucket给子用户授权"><strong>4.bucket给子用户授权</strong></h3>
+<figure data-type="image" tabindex="4"><img src="https://Alphatrionty.github.io/post-images/1662172150681.jpg" alt="" loading="lazy"></figure>
+<h3 id="5设置跨域"><strong>5.设置跨域</strong></h3>
+<figure data-type="image" tabindex="5"><img src="https://Alphatrionty.github.io/post-images/1662172312862.webp" alt="" loading="lazy"></figure>
+<h2 id="代码"><strong>代码：</strong></h2>
+<h3 id="配置oss"><strong>配置oss</strong></h3>
+<pre><code>import OSS from &quot;ali-oss&quot;;
+export const client = new OSS({
+  endpoint: &quot;oss-cn-xxxxxxx.aliyuncs.com&quot;, //填写Bucket所在地域
+  accessKeyId: &quot;LTAIxxxxxxxxxxxxxx&quot;,
+  accessKeySecret: &quot;9xxxxxxxxxxxxxxxxxxxxx&quot;,
+  bucket: &quot;alpxxxxxx&quot;, // 填写Bucket名称。
+});
+</code></pre>
+<h3 id="1根据文件名获取该文件下的文件"><strong>1.根据文件名获取该文件下的文件</strong></h3>
+<pre><code>// 调用listDir函数，通过设置不同的文件前缀列举不同的目标文件。
+function listDir(dir) {
+  client
+    .list({
+      prefix: dir,
+      // 设置正斜线（/）为文件夹的分隔符。
+      delimiter: &quot;/&quot;,
+    })
+    .then((res) =&gt; {
+      dirs.value = res.prefixes; //文件夹
+      files.data = res.objects;  //文件
+      // res.prefixes.forEach((subDir) =&gt; {
+      //   console.log(&quot;SubDir: %s&quot;, subDir);
+      // });
+      //   res.objects.forEach((obj) =&gt; {
+      //     console.log(&quot;Object: %s&quot;, obj.name);
+      //   });
+    })
+    .catch((err) =&gt; {
+      console.log(err);
+    });
+}
+</code></pre>
+<h3 id="2上传文件"><strong>2.上传文件</strong></h3>
+<pre><code>const uploadURL = (file) =&gt; {
+  //注意哦，这里指定文件夹'image/'，尝试过写在配置文件，但是各种不行，写在这里就可以
+  var fileName =
+    &quot;image/&quot; + &quot;banner&quot; + `${Date.parse(new Date().toString())}` + &quot;.jpg&quot;;
+  // &quot;image/&quot; + &quot;banner&quot; + `赛亚人111` + &quot;.jpg&quot;;
+  //定义唯一的文件名，打印出来的uid其实就是时间戳
+  client
+    .multipartUpload(fileName, file.file, {
+      // onUploadProgress: (progressEvent) =&gt; {
+      //         var percentCompleted = Math.round(
+      //           (progressEvent.loaded * 100) / progressEvent.total
+      //         );
+      //         console.log(&quot;进度&quot;+percentCompleted);
+      //       },
+      progress: function (percentage, cpt, res) {
+        // console.log(&quot;打印进度&quot;, percentage);
+        // console.log(cpt);
+        // console.log(res);
+        progressBar.value = percentage * 100;
+      },
+    })
+    .then((res) =&gt; {
+      //此处赋值，是相当于上传成功之后，手动拼接服务器地址和文件名
+      Addfrom.url =
+        &quot;https://xxxxxx.oss-cn-xxxxxxxxx.aliyuncs.com/&quot; + fileName;
+      //或者url=res.res.requestUrls[0].split('?upload')[0]
+      console.log(res.res.requestUrls);
+    });
+};
+</code></pre>
+<h3 id="3删除文件"><strong>3.删除文件</strong></h3>
+<pre><code>const fileName = file.url.replace(&quot;http://xxxxxx.oss-cn-xxxxxx.aliyuncs.com/&quot;, &quot;&quot;)
+client()
+  .delete(fileName)
+  .then(res =&gt; {
+    // console.log(res);
+  });
+</code></pre>
+]]></content>
+    </entry>
+</feed>

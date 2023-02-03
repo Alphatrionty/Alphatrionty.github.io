@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>记一次面试 | Alphatrion</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://Alphatrionty.github.io/favicon.ico?v=1675391917901">
+<link rel="stylesheet" href="https://Alphatrionty.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="🎨一次tx的面经
+
+自我介绍
+怎么学前端
+vue的一些特点
+vue的发布订阅,数据劫持
+vue的数据双向绑定
+Object.defineProperty()如果是数组或者对象呢，vue做了哪些底层优化
+vue为什么能这么火，vue的好处
+..." />
+    <meta name="keywords" content="" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://Alphatrionty.github.io">
+        <img src="https://Alphatrionty.github.io/images/avatar.png?v=1675391917901" class="site-logo">
+        <h1 class="site-title">Alphatrion</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      <h1>且听风呤，静待花开</h1>
+    </div>
+    <div class="site-footer">
+      alphatrion | <a class="rss" href="https://Alphatrionty.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">记一次面试</h2>
+            <div class="post-date">2022-08-30</div>
+            
+              <div class="feature-container" style="background-image: url('https://Alphatrionty.github.io/post-images/ji-yi-ci-mian-shi.jpg')">
+              </div>
+            
+            <div class="post-content" v-pre>
+              <p>🎨一次tx的面经</p>
+<!-- more -->
+<p>自我介绍<br>
+怎么学前端<br>
+vue的一些特点<br>
+vue的发布订阅,数据劫持<br>
+vue的数据双向绑定<br>
+Object.defineProperty()如果是数组或者对象呢，vue做了哪些底层优化<br>
+vue为什么能这么火，vue的好处<br>
+vue跟react的区别<br>
+有没有自己封装过一些vue组件<br>
+nodejs相关，用nodejs干了什么（我项目写了nodejs）<br>
+防抖和节流<br>
+事件循环<br>
+游览器事件模型<br>
+首页白屏，怎么去找到原因<br>
+回流重绘<br>
+说一下用户输入url到页面显示<br>
+智力题：三个煎饼，我有两个锅，一次只能煎一面，要几次煎完<br>
+笔试题：<br>
+1.设计一个函数，用于测试请求一个 URL 的平均耗时，要求可以设置总的请求次数以及并发请求的个数，请求方法暂时用 fetch 代替<br>
+2.实现一个函数，求一个全是数字的数组中，连续位置数字相加的最大和。<br>
+例如：输入[1, 2, 3] 返回 6；<br>
+[2, 2, -4, 3] 返回 4；<br>
+🔒<a href="https://leetcode-cn.com/problems/maximum-subarray/">53. 最大子序和</a><br>
+vue方面的底层答得很差，最后两题一点都没做出来，直接凉凉</p>
+<p>其实给自己挖了很多坑，vue底层没怎么了解<br>
+算法是非常简单的题目，我是真的辣🐔<br>
+害，自己太菜了</p>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://Alphatrionty.github.io/post/git-pei-zhi/">
+                  <h3 class="post-title">
+                    git相关
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

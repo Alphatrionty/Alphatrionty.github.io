@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>git相关 | Alphatrion</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://Alphatrionty.github.io/favicon.ico?v=1675391917901">
+<link rel="stylesheet" href="https://Alphatrionty.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="🎊提交规范和一些git命令
+
+提交规范
+当执行 commit 的时候，需按照下方说明规范进行填写说明信息，type: commit的类型
+scope: commit 影响的范围, 比如: route, component, utils, ..." />
+    <meta name="keywords" content="" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://Alphatrionty.github.io">
+        <img src="https://Alphatrionty.github.io/images/avatar.png?v=1675391917901" class="site-logo">
+        <h1 class="site-title">Alphatrion</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      <h1>且听风呤，静待花开</h1>
+    </div>
+    <div class="site-footer">
+      alphatrion | <a class="rss" href="https://Alphatrionty.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">git相关</h2>
+            <div class="post-date">2022-08-30</div>
+            
+              <div class="feature-container" style="background-image: url('https://Alphatrionty.github.io/post-images/git-pei-zhi.png')">
+              </div>
+            
+            <div class="post-content" v-pre>
+              <p>🎊提交规范和一些git命令</p>
+<!-- more -->
+<h2 id="提交规范"><strong>提交规范</strong></h2>
+<p>当执行 <code>commit</code> 的时候，需按照下方说明规范进行填写说明信息，<code>type</code>: commit的类型<br>
+<code>scope</code>: commit 影响的范围, 比如: route, component, utils, build，后面跟随 <code>英文的冒号+空格+描述信息</code></p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>feat</code></td>
+<td>新内容</td>
+</tr>
+<tr>
+<td><code>fix</code></td>
+<td>修复</td>
+</tr>
+<tr>
+<td><code>refactor</code></td>
+<td>既不修复错误也不添加功能的代码更改</td>
+</tr>
+<tr>
+<td><code>perf</code></td>
+<td>性能优化</td>
+</tr>
+<tr>
+<td><code>revert</code></td>
+<td>恢复某个早期提交(版本回滚)</td>
+</tr>
+<tr>
+<td><code>release</code></td>
+<td>发布新版本</td>
+</tr>
+<tr>
+<td><code>style</code></td>
+<td>代码格式修改</td>
+</tr>
+<tr>
+<td><code>test</code></td>
+<td>新增测试用例或是更新现有测试</td>
+</tr>
+<tr>
+<td><code>chore</code></td>
+<td>其他杂项(比如构建过程或辅助工具)</td>
+</tr>
+<tr>
+<td><code>deps</code></td>
+<td>升级依赖</td>
+</tr>
+<tr>
+<td><code>ci</code></td>
+<td>持续集成相关文件修改</td>
+</tr>
+<tr>
+<td><code>build</code></td>
+<td>影响项目构建或依赖项修改</td>
+</tr>
+<tr>
+<td><code>docs</code></td>
+<td>文档改变</td>
+</tr>
+<tr>
+<td><code>workflow</code></td>
+<td>工作流相关文件修改</td>
+</tr>
+</tbody>
+</table>
+<pre><code>git commit -m 'type(scope): 描述信息'
+git commit -m 'feat(wx): 新增微信分享功能'
+</code></pre>
+<h2 id="命令"><strong>命令</strong></h2>
+<pre><code>git branch xxx 创建分支
+
+git branch -v 查看分支列表
+
+git checkout xxx 切换到xxx分支
+
+git merge xxx 把xxx分支合并到当前分支
+</code></pre>
+<p><a href="https://juejin.cn/post/7144221603218325541">掘金链接</a></p>
+<h3 id="一-关联远程仓库">一、关联远程仓库</h3>
+<p>git全局设置（只需设置一次）<code>--global</code>全局设置</p>
+<pre><code>git config --global user.name &quot;userName&quot;
+git config --global user.email &quot;xxxxxxx@qq.com&quot;
+git config --global user.password &quot;xxxxxxxxxx&quot; //选配
+</code></pre>
+<p>无仓库</p>
+<pre><code>mkdir 项目文件名
+cd 项目文件名
+git init 
+touch README.md
+git add README.md
+git commit -m &quot;first commit&quot;
+git remote add origin https://gitee.com/xxxxxxxxx.git
+git push -u origin &quot;master&quot;
+</code></pre>
+<p>已有仓库</p>
+<pre><code>cd 项目文件夹
+git remote add origin https://gitee.com/xxxxxxxxx.git
+git push -u origin &quot;master&quot;
+</code></pre>
+<h3 id="二-取消关联远程仓库">二、取消关联远程仓库</h3>
+<p>1、<code>git remote -v</code>列出当前git仓库所有的已建立链接的远程仓库的<code>别名</code>和<code>远程地址</code><br>
+<img src="https://Alphatrionty.github.io/post-images/1668734924638.png" alt="" loading="lazy"><br>
+2、删除远程仓库<code>git remote remove origin</code>，再次查看<code>git remote -v</code></p>
+<h2 id="忽略文件gitignore"><strong>忽略文件<code>.gitignore</code></strong></h2>
+<h3 id="tip">tip</h3>
+<p>如果你不慎在创建.gitignore 文件之前就 push 了项目，那么即使你在.gitignore 文件中写入新的忽略规则，这些规则也不会起作用，Git 仍然会对所有文件进行版本管理。<br>
+简单来说出现这种问题的原因就是 Git 已经开始管理这些文件了，所以你无法再通过忽略规则忽略它们。所以最好一开始在项目开始就创建.gitignore 文件。<br>
+<strong>解决方法:先把本地缓存删除（改变成未 track 状态），然后再提交:</strong></p>
+<pre><code>git rm -r --cached .  //或指定文件取消托管git rm -r --cached filename
+git add .
+git commit -m 'update .gitignore'
+</code></pre>
+<p>.gitignore 文件内容匹配规则</p>
+<pre><code>#               表示此为注释,将被Git忽略
+*.a             表示忽略所有 .a 结尾的文件
+!lib.a          表示但lib.a除外
+/TODO           表示仅仅忽略项目根目录下的 TODO 文件，不包括 subdir/TODO
+doc/*.txt       表示会忽略doc/notes.txt但不包括 doc/server/arch.txt
+
+bin/            表示忽略当前路径下的bin文件夹，该文件夹下的所有内容都会被忽略，不忽略 bin 文件
+/bin            表示忽略根目录下的bin文件
+!/bin/run.sh    表示不忽略bin目录下的run.sh文件
+/*.c            表示忽略cat.c，但不忽略 build/cat.c
+debug/*.obj     表示忽略debug/io.obj，但不忽略 debug/common/io.obj和tools/debug/io.obj
+
+**/foo          表示忽略/foo,a/foo,a/b/foo等
+a/**/b          表示忽略a/b, a/x/b,a/x/y/b等
+*.log           表示忽略所有 .log 结尾的文件
+config.php      表示忽略当前路径的 config.php 文件
+/mtk/           表示忽略整个文件夹
+/mtk/do.c       表示忽略某个具体文件
+被忽略掉的文件在本地库中还存在，只是push的时候不会上传到git仓库（gitee）中。
+</code></pre>
+<pre><code>需要注意的是，gitignore还可以指定要将哪些文件添加到版本管理中，如下：
+!*.zip
+!/mtk/one.txt
+唯一的区别就是规则开头多了一个感叹号，Git会将满足这类规则的文件添加到版本管理中。
+</code></pre>
+<pre><code>为什么要有两种规则呢？
+想象一个场景：假如我们只需要管理/mtk/目录中的one.txt文件，这个目录中的其他文件都不需要管理，那么.gitignore规则应写为：
+/mtk/*
+!/mtk/one.txt
+
+假设只有过滤规则，而没有添加规则，那么就需要把/mtk/目录下除了one.txt以外的所有文件都写出来。
+注意：上面的/mtk/*不能写为/mtk/，否则父目录被前面的规则排除掉了，one.txt文件虽然加了!忽略规则，但也不会生效。
+</code></pre>
+<pre><code>还有一些规则如下：
+fd1/*		  表示忽略目录 fd1 下的全部内容；注意，不管是根目录下的 /fd1/ 目录，还是某个子目录 /child/fd1/ 目录，都会被忽略
+/fd1/*		  表示忽略根目录下的 /fd1/ 目录的全部内容
+ 
+/*
+!.gitignore
+!/fw/ 
+/fw/*
+!/fw/bin/
+!/fw/sf/
+说明：忽略全部内容，但是不忽略 .gitignore 文件、根目录下的 /fw/bin/ 和 /fw/sf/ 目录。注意：要先对bin/的父目录使用!规则，使其不被排除。
+</code></pre>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://Alphatrionty.github.io/post/fiddler-shi-xian-shou-ji-zhua-bao-huo-qu-xue-xiao-dian-fei-jie-kou/">
+                  <h3 class="post-title">
+                    Fiddler 实现手机抓包，获取学校电费接口
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

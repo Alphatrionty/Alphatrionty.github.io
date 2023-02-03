@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>Fiddler 实现手机抓包，获取学校电费接口 | Alphatrion</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://Alphatrionty.github.io/favicon.ico?v=1675391917901">
+<link rel="stylesheet" href="https://Alphatrionty.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="🐱‍🏍再也不用进app点点点了，秒查电费！
+
+👉CSDN教程
+1、Fiddler 简介
+Fiddler 是一款强大的抓包工具，原理是以 web 代理服务器的形式进行工作的：
+
+2、Fiddler 配置
+2.1 允许监听https
+Fi..." />
+    <meta name="keywords" content="技术相关" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://Alphatrionty.github.io">
+        <img src="https://Alphatrionty.github.io/images/avatar.png?v=1675391917901" class="site-logo">
+        <h1 class="site-title">Alphatrion</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      <h1>且听风呤，静待花开</h1>
+    </div>
+    <div class="site-footer">
+      alphatrion | <a class="rss" href="https://Alphatrionty.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">Fiddler 实现手机抓包，获取学校电费接口</h2>
+            <div class="post-date">2022-08-30</div>
+            
+              <div class="feature-container" style="background-image: url('https://Alphatrionty.github.io/post-images/fiddler-shi-xian-shou-ji-zhua-bao-huo-qu-xue-xiao-dian-fei-jie-kou.jpg')">
+              </div>
+            
+            <div class="post-content" v-pre>
+              <p>🐱‍🏍再也不用进app点点点了，秒查电费！</p>
+<!-- more -->
+<p><a href="https://blog.csdn.net/aoshilang2249/article/details/111222105">👉<strong>CSDN教程</strong></a><br>
+<strong>1、Fiddler 简介</strong><br>
+Fiddler 是一款强大的抓包工具，原理是以 web 代理服务器的形式进行工作的：<br>
+<img src="https://Alphatrionty.github.io/post-images/1632049222433.png" alt="" loading="lazy"><br>
+<strong>2、Fiddler 配置</strong><br>
+2.1 允许监听https<br>
+Fiddler 如果抓取 https 协议会话需要进一步配置，在 Tools -&gt;Options 菜单下，选择HTTPS标签并配置如下：<br>
+<img src="https://Alphatrionty.github.io/post-images/1632049178899.png" alt="" loading="lazy"><br>
+2.2 允许远程连接<br>
+手机抓取需要配置远程连接，在 Tools -&gt;Options 菜单下，选择Connections标签并配置如下：<br>
+<img src="https://Alphatrionty.github.io/post-images/1632049240484.png" alt="" loading="lazy"><br>
+监听端口 8888 并允许远程连接</p>
+<p>防火墙需要开放 8888 端口</p>
+<p><strong>3、手机配置</strong><br>
+需要电脑与手机处于同一网段（例如同一局域网）</p>
+<p>以 iphone 为例</p>
+<p>3.1 下载证书<br>
+打开手机浏览器，输入 http://【fiddler电脑IP地址】:【fiddler设置的端口号】，例如 http://192.168.123.100:8888 可以下载证书并安装。在打开的页面中，点击 FiddlerRoot certificate 下载证书，点击允许<br>
+<img src="https://Alphatrionty.github.io/post-images/1632049261028.png" alt="" loading="lazy"></p>
+<p>3.2 安装证书<br>
+在Settings系统设置中，点击 Profile Downloaded（已下载的配置文件）</p>
+<p>点击 Install ，安装证书</p>
+<p>不同系统手机的下载路径不一样，例如有的是： 设置-&gt;通用-&gt;关于本机-&gt;证书信任设置</p>
+<p>3.3 配置代理<br>
+配置手机无线信号的代理</p>
+<p>手机设置 -&gt; WLAN -&gt; 选择无线网络 -&gt; HTTP Proxy，选择 Manual，Server 为 Fiddler 的电脑 ip 地址，端口号为 Fiddler 的端口号：<br>
+<img src="https://Alphatrionty.github.io/post-images/1632049283971.png" alt="" loading="lazy"></p>
+<p>此时操作浏览器或APP，在 fiddler 中可以看到完成的请求和响应数据：<br>
+<img src="https://Alphatrionty.github.io/post-images/1632049297157.png" alt="" loading="lazy"></p>
+<figure data-type="image" tabindex="1"><img src="https://Alphatrionty.github.io/post-images/1632050057850.png" alt="" loading="lazy"></figure>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://Alphatrionty.github.io/tag/technology/" class="tag">
+                    技术相关
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://Alphatrionty.github.io/post/za-zhi-di-yi-qi/">
+                  <h3 class="post-title">
+                    随志第一期
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>axios封装方式 | Alphatrion</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://Alphatrionty.github.io/favicon.ico?v=1675391917901">
+<link rel="stylesheet" href="https://Alphatrionty.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="/**
+ * axios实例封装 instance.js
+ */
+import axios from &quot;axios&quot;;
+import { ElLoading } from &quot;element-plus&quot;..." />
+    <meta name="keywords" content="" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://Alphatrionty.github.io">
+        <img src="https://Alphatrionty.github.io/images/avatar.png?v=1675391917901" class="site-logo">
+        <h1 class="site-title">Alphatrion</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      <h1>且听风呤，静待花开</h1>
+    </div>
+    <div class="site-footer">
+      alphatrion | <a class="rss" href="https://Alphatrionty.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">axios封装方式</h2>
+            <div class="post-date">2022-11-27</div>
+            
+              <div class="feature-container" style="background-image: url('https://Alphatrionty.github.io/post-images/axios-feng-zhuang-fang-shi.jpg')">
+              </div>
+            
+            <div class="post-content" v-pre>
+              <pre><code>/**
+ * axios实例封装 instance.js
+ */
+import axios from &quot;axios&quot;;
+import { ElLoading } from &quot;element-plus&quot;;
+
+let baseURL = &quot;&quot;; //请求基础地址
+
+let loadingInstance = null;
+
+// 设置超时时间
+const TIMEOUT = 6000;
+
+if (process.env.NODE_ENV === &quot;production&quot;) {
+  //生产环境
+
+  baseURL = &quot;&quot;;
+} else {
+  //开发环境
+  //   baseURL = &quot;https://dev.gzczzn.com:4587&quot;
+  //   baseURL = &quot;https://dev.gzczzn.com:3939&quot; //公网内测
+  baseURL = &quot;http://192.168.2.232:8685&quot;;
+}
+
+const instance = axios.create({
+  //创建axios实例
+  baseURL,
+  
+  timeout: TIMEOUT
+});
+
+instance.interceptors.request.use(
+  function (config) {
+    // 请求拦截
+
+    loadingInstance = ElLoading.service({ fullscreen: true });
+    return config;
+  },
+  function (error) {
+    // 对请求错误做些什么
+
+    return Promise.reject(error);
+  }
+);
+
+instance.interceptors.response.use(
+  function (response) {
+    // 响应拦截
+
+    loadingInstance &amp;&amp; loadingInstance.close();
+    return response;
+  },
+  function (error) {
+    // 对响应错误做点什么
+
+    return Promise.reject(error);
+  }
+);
+
+export default instance;
+
+</code></pre>
+<p>一、不封装成一个个方法</p>
+<pre><code>/**
+ * 网络请求封装 index.js
+ */
+import instance from &quot;./instance&quot;;
+
+function requestMethod(method) {
+  return function request({ url, data, isParams }) {
+    const _data = isParams ? { url, params: data, method } : { url, data, method };
+
+    return new Promise((resolve, reject) =&gt; {
+      instance(_data)
+        .then(res =&gt; {
+          resolve(res.data);
+        })
+        .catch(err =&gt; {
+          reject(err);
+        });
+    });
+  };
+}
+
+export const $Get = requestMethod(&quot;get&quot;);
+export const $Post = requestMethod(&quot;post&quot;);
+export const $Put = requestMethod(&quot;put&quot;);
+</code></pre>
+<p>使用</p>
+<pre><code>import { $Get } from '../../network';
+
+const params={
+    url:'/user/login',
+    data:{
+      phone: userinfo.value.userName,
+      password: userinfo.value.passWord
+    },
+    isParams:true
+  }
+
+  $Get(params).then(res=&gt;{
+    console.log(res);
+  }).catch(err=&gt;{
+    console.log(err);
+  })
+</code></pre>
+<p>一、封装成一个个方法<br>
+api/对应分部.js</p>
+<pre><code>/**
+ * /xxxxx/xxxxx  接口描述
+ */
+export function 请求函数名(params) {
+  return instance.request({
+    method: &quot;get&quot;,
+    url: &quot;/xxxxx/xxxxx &quot;,
+    params: params,
+    &lt;!-- data: params --&gt;
+  });
+}
+</code></pre>
+<p>使用</p>
+<pre><code>import { 请求函数名 } from 'api/对应分部.js'
+const params={
+      phone:userinfo.value.userName,
+      password:userinfo.value.passWord
+  }
+
+  请求函数名(params).then(res=&gt;{
+    console.log(res);
+  }).catch(err=&gt;{
+    console.log(err);
+  })
+
+</code></pre>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://Alphatrionty.github.io/post/yi-dong-duan-xiang-guan/">
+                  <h3 class="post-title">
+                    移动端相关
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

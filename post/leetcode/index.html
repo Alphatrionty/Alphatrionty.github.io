@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>leetCode篇二 | Alphatrion</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://Alphatrionty.github.io/favicon.ico?v=1675391917901">
+<link rel="stylesheet" href="https://Alphatrionty.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="✨整理刷过的leetCode...
+
+🤣495.提莫攻击
+var findPoisonedDuration = function(timeSeries, duration) {
+    let res = 0;    //中毒持续的时间
+..." />
+    <meta name="keywords" content="leetcode" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://Alphatrionty.github.io">
+        <img src="https://Alphatrionty.github.io/images/avatar.png?v=1675391917901" class="site-logo">
+        <h1 class="site-title">Alphatrion</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      <h1>且听风呤，静待花开</h1>
+    </div>
+    <div class="site-footer">
+      alphatrion | <a class="rss" href="https://Alphatrionty.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">leetCode篇二</h2>
+            <div class="post-date">2022-09-14</div>
+            
+              <div class="feature-container" style="background-image: url('https://Alphatrionty.github.io/post-images/leetcode.jpg')">
+              </div>
+            
+            <div class="post-content" v-pre>
+              <p>✨整理刷过的leetCode...</p>
+<!-- more -->
+<h3 id="495提莫攻击"><a href="https://leetcode.cn/problems/teemo-attacking/">🤣495.提莫攻击</a></h3>
+<pre><code>var findPoisonedDuration = function(timeSeries, duration) {
+    let res = 0;    //中毒持续的时间
+    for(let i = 1;i &lt; timeSeries.length;i++) {
+        if(timeSeries[i] - timeSeries[i-1] &lt;= duration) { //如果间隔小于或等于中毒时间
+            res += timeSeries[i] - timeSeries[i-1];
+        }else {
+            res += duration;
+        }
+    }
+    return res + duration;  //加上最后一位没算上的中毒时间
+};
+</code></pre>
+<h3 id="463岛屿的周长"><a href="https://leetcode.cn/problems/island-perimeter/">🔒463.岛屿的周长</a></h3>
+<p>一块土地原则上会带来 4 个周长，但岛上的土地存在接壤，每一条接壤，会减掉 2 个边长。<br>
+所以，总周长 = 4 * 土地个数 - 2 * 接壤边的条数。<br>
+<img src="https://Alphatrionty.github.io/post-images/1663210818246.png" alt="" loading="lazy"><br>
+遍历矩阵，遍历到土地，就 land++，如果它的右/下边也是土地，则 border++，遍历结束后代入公式。</p>
+<pre><code>var islandPerimeter = function(grid) {
+    alone = 0;
+    together = 0;
+    for(let i = 0;i &lt; grid.length;i++) {
+        for(let j = 0;j &lt; grid[0].length;j++) {
+            if(grid[i][j] === 1) {
+                alone++;
+                if(i &lt; grid.length - 1 &amp;&amp; grid[i+1][j] === 1) {
+                    together++;
+                }
+                if(j &lt; grid[0].length - 1 &amp;&amp; grid[i][j+1] === 1) {
+                    together++;
+                }
+            }
+        }
+    }
+    return alone * 4 - together * 2;
+};
+</code></pre>
+<h3 id="455分发饼干"><a href="https://leetcode.cn/problems/assign-cookies/">🔒455.分发饼干</a></h3>
+<p>先将两个数组升序排序，从两个数组的开头进行比较。如果一个饼干不能满足，则丢弃，因为排序过，所以不可能满足后面的小孩，只能拿更大的饼干来满足当前的小孩。</p>
+<pre><code>var findContentChildren = function(g, s) {
+    g.sort((a,b) =&gt; a-b);  //a-b升序，b-a降序
+    s.sort((a,b) =&gt; a-b);
+    let i = 0;
+    let j = 0;
+    while(i &lt; g.length &amp;&amp; j &lt; s.length) {
+        if(g[i] &lt;= s[j]) {
+            i++;
+        }
+        j++;  //因为排序过了
+    }
+    return i;
+};
+</code></pre>
+<h3 id="860柠檬水找零"><a href="https://leetcode.cn/problems/lemonade-change/">🔒860.柠檬水找零</a></h3>
+<p>只有三个数字：5，10，20；5是很重要的面值，要想找最多的零，就必须有10先用10。可以将情况分为三种，对应情况使用对应面值组合。如果遇到找不了零的直接返回false。</p>
+<pre><code>var lemonadeChange = function(bills) {
+    if(bills[0] != 5){
+        return false;
+    }
+    var five = 0;
+    var ten = 0;
+    for(let i = 0;i &lt; bills.length; i++){
+        if(bills[i] === 5){
+            five++;
+        }else if(bills[i] === 10 &amp;&amp; five &gt; 0){
+            five--;
+            ten++;
+        }else{
+            if(five &gt; 0 &amp;&amp; ten &gt; 0){
+                five--;
+                ten--;
+            }else if(five &gt; 2){
+                five -= 3;
+            }else{
+                return false
+            }
+        }
+    }
+    return true;
+};
+</code></pre>
+<h3 id="804唯一摩尔斯密码词"><a href="https://leetcode.cn/problems/unique-morse-code-words/">🔒804.唯一摩尔斯密码词</a></h3>
+<p>一开始是想用map对象，看了评论后才想到用数组更方便，字母转为ASCII表可分别对应摩尔斯的下标，直接用下标取值。用Set函数去重，得到长度。</p>
+<pre><code>var uniqueMorseRepresentations = function(words) {
+    var moss = [&quot;.-&quot;,&quot;-...&quot;,&quot;-.-.&quot;,&quot;-..&quot;,&quot;.&quot;,&quot;..-.&quot;,&quot;--.&quot;,&quot;....&quot;,&quot;..&quot;,&quot;.---&quot;,&quot;-.-&quot;,&quot;.-..&quot;,
+    &quot;--&quot;,&quot;-.&quot;,&quot;---&quot;,&quot;.--.&quot;,&quot;--.-&quot;,&quot;.-.&quot;,&quot;...&quot;,&quot;-&quot;,&quot;..-&quot;,&quot;...-&quot;,&quot;.--&quot;,&quot;-..-&quot;,&quot;-.--&quot;,&quot;--..&quot;];
+    var set = new Set();
+    for(let i = 0;i &lt; words.length;i++) {
+        let str = '';
+        for(let j = 0;j &lt; words[i].length;j++) {
+            str += moss[words[i].charCodeAt(j) - 97];
+        }
+        set.add(str);
+    }
+    return set.size;
+};
+</code></pre>
+<h3 id="136只出现一次的数字"><a href="https://leetcode.cn/problems/single-number/">🔒136.只出现一次的数字</a></h3>
+<p><strong>可以使用异或直接得到结果</strong><br>
+交换律：a ^ b ^ c &lt;=&gt; a ^ c ^ b<br>
+任何数于0异或为任何数 0 ^ n =&gt; n<br>
+相同的数异或为0: n ^ n =&gt; 0<br>
+var a = [2,3,2,4,4]<br>
+2 ^ 3 ^ 2 ^ 4 ^ 4等价于 2 ^ 2 ^ 4 ^ 4 ^ 3 =&gt; 0 ^ 0 ^3 =&gt; 3</p>
+<pre><code>var singleNumber = function(nums) {
+    if(nums.length === 1) {
+        return nums[0];
+    }
+    let res = nums[0];
+    for(let i = 1;i &lt; nums.length;i++) {
+        res = res ^ nums[i];
+    }
+    return res;
+};
+</code></pre>
+<p><strong>或者使用数学方法，因为只有一个数字是出现一次；去重后翻倍便是全部数字出现两次，减去原数组，得到结果</strong></p>
+<pre><code>var singleNumber = function(nums) {
+    let total = nums.reduce((prev,next) =&gt; {
+        return prev + next;
+    })
+    let set = new Set(nums)
+    let setTotal = [...set].reduce((prev,next) =&gt; {
+        return prev + next;
+    })
+    return 2 * setTotal - total;
+};
+</code></pre>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://Alphatrionty.github.io/tag/leetcode/" class="tag">
+                    leetcode
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://Alphatrionty.github.io/post/oss-shi-yong/">
+                  <h3 class="post-title">
+                    OSS使用
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

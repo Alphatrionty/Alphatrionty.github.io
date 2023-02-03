@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>OSS使用 | Alphatrion</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://Alphatrionty.github.io/favicon.ico?v=1675391917901">
+<link rel="stylesheet" href="https://Alphatrionty.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="🎈分享初次使用阿里云OSS
+
+1.创建bucket
+
+2.创建子用户
+
+3.给子用户授权
+
+4.bucket给子用户授权
+
+5.设置跨域
+
+代码：
+配置oss
+import OSS from &quot;ali-oss&quot;;
+ex..." />
+    <meta name="keywords" content="技术相关" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://Alphatrionty.github.io">
+        <img src="https://Alphatrionty.github.io/images/avatar.png?v=1675391917901" class="site-logo">
+        <h1 class="site-title">Alphatrion</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      <h1>且听风呤，静待花开</h1>
+    </div>
+    <div class="site-footer">
+      alphatrion | <a class="rss" href="https://Alphatrionty.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">OSS使用</h2>
+            <div class="post-date">2022-09-03</div>
+            
+              <div class="feature-container" style="background-image: url('https://Alphatrionty.github.io/post-images/oss-shi-yong.jpeg')">
+              </div>
+            
+            <div class="post-content" v-pre>
+              <p>🎈分享初次使用阿里云OSS</p>
+<!-- more -->
+<h3 id="1创建bucket"><strong>1.创建bucket</strong></h3>
+<figure data-type="image" tabindex="1"><img src="https://Alphatrionty.github.io/post-images/1662171975835.jpg" alt="" loading="lazy"></figure>
+<h3 id="2创建子用户"><strong>2.创建子用户</strong></h3>
+<figure data-type="image" tabindex="2"><img src="https://Alphatrionty.github.io/post-images/1662172045604.jpg" alt="" loading="lazy"></figure>
+<h3 id="3给子用户授权"><strong>3.给子用户授权</strong></h3>
+<figure data-type="image" tabindex="3"><img src="https://Alphatrionty.github.io/post-images/1662172120264.jpg" alt="" loading="lazy"></figure>
+<h3 id="4bucket给子用户授权"><strong>4.bucket给子用户授权</strong></h3>
+<figure data-type="image" tabindex="4"><img src="https://Alphatrionty.github.io/post-images/1662172150681.jpg" alt="" loading="lazy"></figure>
+<h3 id="5设置跨域"><strong>5.设置跨域</strong></h3>
+<figure data-type="image" tabindex="5"><img src="https://Alphatrionty.github.io/post-images/1662172312862.webp" alt="" loading="lazy"></figure>
+<h2 id="代码"><strong>代码：</strong></h2>
+<h3 id="配置oss"><strong>配置oss</strong></h3>
+<pre><code>import OSS from &quot;ali-oss&quot;;
+export const client = new OSS({
+  endpoint: &quot;oss-cn-xxxxxxx.aliyuncs.com&quot;, //填写Bucket所在地域
+  accessKeyId: &quot;LTAIxxxxxxxxxxxxxx&quot;,
+  accessKeySecret: &quot;9xxxxxxxxxxxxxxxxxxxxx&quot;,
+  bucket: &quot;alpxxxxxx&quot;, // 填写Bucket名称。
+});
+</code></pre>
+<h3 id="1根据文件名获取该文件下的文件"><strong>1.根据文件名获取该文件下的文件</strong></h3>
+<pre><code>// 调用listDir函数，通过设置不同的文件前缀列举不同的目标文件。
+function listDir(dir) {
+  client
+    .list({
+      prefix: dir,
+      // 设置正斜线（/）为文件夹的分隔符。
+      delimiter: &quot;/&quot;,
+    })
+    .then((res) =&gt; {
+      dirs.value = res.prefixes; //文件夹
+      files.data = res.objects;  //文件
+      // res.prefixes.forEach((subDir) =&gt; {
+      //   console.log(&quot;SubDir: %s&quot;, subDir);
+      // });
+      //   res.objects.forEach((obj) =&gt; {
+      //     console.log(&quot;Object: %s&quot;, obj.name);
+      //   });
+    })
+    .catch((err) =&gt; {
+      console.log(err);
+    });
+}
+</code></pre>
+<h3 id="2上传文件"><strong>2.上传文件</strong></h3>
+<pre><code>const uploadURL = (file) =&gt; {
+  //注意哦，这里指定文件夹'image/'，尝试过写在配置文件，但是各种不行，写在这里就可以
+  var fileName =
+    &quot;image/&quot; + &quot;banner&quot; + `${Date.parse(new Date().toString())}` + &quot;.jpg&quot;;
+  // &quot;image/&quot; + &quot;banner&quot; + `赛亚人111` + &quot;.jpg&quot;;
+  //定义唯一的文件名，打印出来的uid其实就是时间戳
+  client
+    .multipartUpload(fileName, file.file, {
+      // onUploadProgress: (progressEvent) =&gt; {
+      //         var percentCompleted = Math.round(
+      //           (progressEvent.loaded * 100) / progressEvent.total
+      //         );
+      //         console.log(&quot;进度&quot;+percentCompleted);
+      //       },
+      progress: function (percentage, cpt, res) {
+        // console.log(&quot;打印进度&quot;, percentage);
+        // console.log(cpt);
+        // console.log(res);
+        progressBar.value = percentage * 100;
+      },
+    })
+    .then((res) =&gt; {
+      //此处赋值，是相当于上传成功之后，手动拼接服务器地址和文件名
+      Addfrom.url =
+        &quot;https://xxxxxx.oss-cn-xxxxxxxxx.aliyuncs.com/&quot; + fileName;
+      //或者url=res.res.requestUrls[0].split('?upload')[0]
+      console.log(res.res.requestUrls);
+    });
+};
+</code></pre>
+<h3 id="3删除文件"><strong>3.删除文件</strong></h3>
+<pre><code>const fileName = file.url.replace(&quot;http://xxxxxx.oss-cn-xxxxxx.aliyuncs.com/&quot;, &quot;&quot;)
+client()
+  .delete(fileName)
+  .then(res =&gt; {
+    // console.log(res);
+  });
+</code></pre>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://Alphatrionty.github.io/tag/technology/" class="tag">
+                    技术相关
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://Alphatrionty.github.io/post/leetcode-pian/">
+                  <h3 class="post-title">
+                    leetCode篇一
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>
